@@ -78,6 +78,7 @@
 
         //Background and foreground
         
+        game.background.draw(ctxBackground);
         //        stage.drawBackground(ctxBackground);
         //        stage.drawGround(ctxBackground);
 

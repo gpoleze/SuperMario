@@ -34,7 +34,7 @@ function Cloud(x, y,velX) {
 
         context.closePath()
 
-        context.fillStyle = "lightgray";
+        context.fillStyle = "white";
         context.fill();
     }
 

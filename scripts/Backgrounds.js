@@ -8,8 +8,8 @@ function Background(world, width, height) {
 
     var backgroundDisplacementMap = {
         yoshi: {
-            x: 1,
-            y: 1,
+            x: 516,
+            y: 438
         }
     };
 
@@ -23,10 +23,9 @@ function Background(world, width, height) {
         this.onload = true;
     };
 
-    function fnDraw() {
-        //Estou acertando esta funcao!!!
-        var sx = 2 + sWidth * backgroundDisplacementMap[world].x;
-        var sy = 2 + sHeight * backgroundDisplacementMap[world].x;
+    function fnDraw(ctx) {
+        var sx = backgroundDisplacementMap[world].x;
+        var sy = backgroundDisplacementMap[world].y;
         var dx = 0;
         var dy = 0;
         var dWidth = width;

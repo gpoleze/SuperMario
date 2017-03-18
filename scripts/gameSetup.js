@@ -142,6 +142,7 @@
     function fnGameSetup() {
         return {
             hero:mario,
+            background:background,
             fps: fps,
             stop: stop,
             g: g,
