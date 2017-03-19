@@ -45,8 +45,6 @@
         //to draw itself on canvas
         this.draw = fnDraw;
 
-        //static - to manage which image must be drawn
-        this.whichImage = fnWhichImage;
 
         //Move the Hero through the map
         this.control = fnControl;
@@ -144,42 +142,65 @@
             //Upper Left
             var xBlockUpperLeft = Math.floor(x / blockSize);
             var yBlockUpperLeft = Math.floor(y / blockSize);
+            //            console.log("xBlockUpperLeft", xBlockUpperLeft);
+            //            console.log("yBlockUpperLeft", yBlockUpperLeft);
 
             //Upper Right
             var xBlockUpperRight = Math.floor((x + width) / blockSize);
             var yBlockUpperRight = Math.floor(y / blockSize);
+            console.log("xBlockUpperRight", xBlockUpperRight);
+            console.log("yBlockUpperRight", yBlockUpperRight);
 
             //Bottom Left corner
             var xBlockBottomLeft = Math.floor(x / blockSize);
             var yBlockBottomLeft = Math.floor((y + height) / blockSize);
+            //            console.log("xBlockBottomLeft", xBlockBottomLeft);
+            //            console.log("yBlockBottomLeft", yBlockBottomLeft);
 
             //Bottom Right corner
-            var xBlockBottomRight = Math.floor((x + width) / blockSize);
+            var xBlockBottomRight = Math.ceil((x + width) / blockSize);
             var yBlockBottomRight = Math.floor((y + height) / blockSize);
+            console.log("xBlockBottomRight", xBlockBottomRight);
+            console.log("yBlockBottomRight", yBlockBottomRight);
 
-
-            if (vy >= 0)
-                if (obj[xBlockBottomLeft][yBlockBottomLeft] || obj[xBlockBottomRight][yBlockBottomRight]) {
+            if (vy >= 0) {
+                if (obj[xBlockBottomLeft][yBlockBottomLeft+1] || obj[xBlockBottomRight][yBlockBottomRight+1]) {
                     vy = 0;
-                    
+                    //Adjustment to stay exactaly on the block
+//                    y = (yBlockBottomRight - 1) * blockSize;
+                    console.log("vy >= 0");
                 }
+            }
 
-            if (vy < 0)
-                if (obj[xBlockUpperLeft][yBlockUpperLeft] || obj[xBlockUpperRight][yBlockUpperRight])
+            if (vy < 0) {
+                if (obj[xBlockUpperLeft][yBlockUpperLeft] || obj[xBlockUpperRight][yBlockUpperRight]) {
                     vy = 0;
+                    //Posistion adjustment
+                    y = (yBlockBottomRight + 1) * blockSize;
+                    console.log("vy < 0");
+                }
+            }
 
-            //            console.log(Math.floor(xAxis / blockSize));
-            //            console.log(yBlock);
-            //            console.log(obj[xBlock][yBlock]);
-            //
+            if (vx < 0) {
+                if (obj[xBlockUpperLeft][yBlockUpperLeft] || obj[xBlockBottomLeft][yBlockBottomLeft]) {
+                    vx = 0;
+                    //Adjustment to stay exactaly on the block
+                    x = (xBlockUpperLeft + 1) * blockSize;
+                    console.log("vx < 0");
+                }
+            }
 
-            if (x <= 0)
+            if (vx > 0) {
+                if (obj[xBlockUpperRight][yBlockUpperRight] || obj[xBlockBottomRight][yBlockBottomRight]) {
+                    vx = 0
+                    x = (xBlockUpperRight )*blockSize; 
+                    console.log("vx > 0");
+                }
+            }
+
+            if (x <= 0) //|| x >= (1024 - width))
                 if (vx < 0)
                     vx = -vx;
-
-        };
-
-        function fnWhichImage() {
 
         };
 
@@ -208,7 +229,7 @@
             e.preventDefault();
 
             //x-axys movement
-            if (e.type == "keypress") {
+            if (e.type == "keydown") {
                 if (e.key == "d" || e.key == "D")
                     vx = 8;
                 if (e.key == "a" || e.key == "A")
@@ -222,15 +243,14 @@
 
             }
 
-
+            //            console.log(e.type);
             //y-axys movement
-            if (e.key == "w" || e.key == "W") {
-                if (vy == 0)
+
+            if ((e.key == "w" || e.key == "W") && e.type == "keydown") {
+                if (action != "jump") {
                     vy = -24;
+                }
             }
-
-
-
         }
 
 

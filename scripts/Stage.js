@@ -35,7 +35,6 @@ function Stage(map, size, scale, width, height, world) {
         return blockSize;
     }
 
-    //SERIOUS PROBLEMS HERE!!! IF I ASK TO DRAW EACH FRAME IT SLOW DOWN THE PROGRAM TOO MUCH
     function fnDraw(ctx) {
         for (var y = 0; y < height / blockSize; y++)
             for (var x = 0; x < width / blockSize; x++)

@@ -100,8 +100,8 @@
             game.stop = false;
             main();
         }
-        console.log(e.clientX - canvas.getBoundingClientRect().left);
-        console.log(e.clientY - canvas.getBoundingClientRect().top);
+//        console.log("x",pageXOffset);
+//        console.log("Y",e.clientY-8);
         console.log(game.stop);
     });
 
@@ -114,6 +114,12 @@
     window.addEventListener("keyup", function (e) {
         e.preventDefault();
         mario.control(e);
+        
+    });
+    window.addEventListener("keydown", function (e) {
+        e.preventDefault();
+        mario.control(e);
+        
     });
 
 })();
