@@ -9,18 +9,14 @@
     var ctx = game.ctx;
     var ctxBackground = game.ctxBackground;
     var cloud = game.cloud;
-
     var mario = game.hero;
-    
-    //---- ELEMENTS INSTATIATION ----//
-//    var mario = new Hero("mario", game.marioSpriteMap, game.scale)
 
-    
+
     //---- LOADING ----//
     loading();
 
     function loading() {
-        if (mario.isLoaded()) {
+        if (mario.isLoaded() && game.background.isLoaded() && game.stage.isLoaded()) {
             main();
         } else {
             loadingMessage();
@@ -39,6 +35,10 @@
     //---- GAME ----//
     function main() {
         startGame();
+
+        game.background.draw(ctxBackground);
+        game.stage.draw(ctxBackground);
+
     }
 
     //----  ----//
@@ -62,7 +62,7 @@
 
         //UPDATE PLACE ON THE SCREEN
         mario.size();
-        mario.move(game.g);
+        mario.move(game.g, game.stage.getElementsOnScreen(), game.stage.getBlockSize());
 
         //RESTART ANIMATION
         if (!game.stop)
@@ -77,10 +77,10 @@
 
 
         //Background and foreground
-        
+
         game.background.draw(ctxBackground);
-        //        stage.drawBackground(ctxBackground);
-        //        stage.drawGround(ctxBackground);
+        game.stage.draw(ctx);
+
 
         for (var i = 0; i < cloud.length; i++)
             cloud[i].draw(ctx);
@@ -93,13 +93,15 @@
 
 
     //EVENT LISTENER
-    document.getElementById("myCanvas").addEventListener("click", function () {
+    document.getElementById("myCanvas").addEventListener("click", function (e) {
         if (!game.stop) {
             game.stop = true;
         } else {
             game.stop = false;
             main();
         }
+        console.log(e.clientX - canvas.getBoundingClientRect().left);
+        console.log(e.clientY - canvas.getBoundingClientRect().top);
         console.log(game.stop);
     });
 

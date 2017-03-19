@@ -4,7 +4,7 @@ function Background(world, width, height) {
     var dHeight = height;
     var sWidth = 512;
     var sHeight = 432;
-    this.onload = false;
+    var loaded = false;
 
     var backgroundDisplacementMap = {
         yoshi: {
@@ -19,8 +19,14 @@ function Background(world, width, height) {
 
     this.draw = fnDraw;
 
+    this.isLoaded = fnIsloaded;
+    
+    function fnIsloaded(){
+        return loaded;
+    }
+    
     function fnOnload() {
-        this.onload = true;
+        loaded = true;
     };
 
     function fnDraw(ctx) {

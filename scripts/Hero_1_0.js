@@ -21,7 +21,7 @@
         //SPRITE SHEET IMAGE
         var image = new Image();
         var sprites = spriteMap; // sprite displacemt for all the images
-        var loaded = false;
+        var isLoaded = false;
         image.src = "images/heroes/" + name + ".png";
         image.onload = fnLoaded;
         var frameAt = 0;
@@ -58,10 +58,32 @@
 
         this.whichPowerUp = fnWhichPowerUp;
 
+
+
         //---- FUNCTIONS ----//
         function fnSize() {
             width = sprites[powerUp][action].width;
             height = sprites[powerUp][action].height;
+        }
+
+        function whichFrameAt() {
+            var obj = sprites[powerUp][action];
+
+            if (vx != 0) {
+                if (frameAt + 1 > obj.frames - 1)
+                    addToFrameAt = -1;
+                if (frameAt - 1 < 0)
+                    addToFrameAt = 1;
+                frameAt += addToFrameAt;
+            } else
+                frameAt = 0;
+
+            if (vy < 0)
+                frameAt = 0;
+            if (vy > 0)
+                frameAt = 1;
+
+            //            console.log(frameAt);
         }
 
         function fnWhichAction() {
@@ -87,11 +109,11 @@
         }
 
         function fnLoaded() {
-            loaded = true;
+            isLoaded = true;
         };
 
         function fnIsLoaded() {
-            return loaded;
+            return isLoaded;
         };
 
         function fnDraw(context) {
@@ -99,27 +121,9 @@
             this.whichAction();
             this.whichDirection();
             this.whichPowerUp();
+            whichFrameAt();
 
             var obj = sprites[powerUp][action];
-
-            // Which frame decision
-            if (vx != 0) {
-                if (frameAt + 1 > obj.frames - 1)
-                    addToFrameAt = -1;
-                if (frameAt - 1 < 0)
-                    addToFrameAt = 1;
-                frameAt += addToFrameAt;
-            } else
-                frameAt = 0;
-
-            if (vy < 0)
-                frameAt = 0;
-            if (vy > 0)
-                frameAt = 1;
-
-
-            console.log(frameAt);
-
 
             var sx = obj[direction][frameAt].x;
             var sy = obj[direction][frameAt].y;
@@ -136,21 +140,42 @@
         };
 
         //first atempt must be imroved after add the stage elements
-        function fnCollide() {
-            //        console.log('width', width);
-            //        console.log('height', height);
-            //        console.log('height + y', height + y);
-            //        console.log(y);
+        function fnCollide(obj, blockSize) {
+            //Upper Left
+            var xBlockUpperLeft = Math.floor(x / blockSize);
+            var yBlockUpperLeft = Math.floor(y / blockSize);
 
-            if (x == 0)
-                vx = 0;
-            if (x + width == 1024)
-                vx = 0;
+            //Upper Right
+            var xBlockUpperRight = Math.floor((x + width) / blockSize);
+            var yBlockUpperRight = Math.floor(y / blockSize);
+
+            //Bottom Left corner
+            var xBlockBottomLeft = Math.floor(x / blockSize);
+            var yBlockBottomLeft = Math.floor((y + height) / blockSize);
+
+            //Bottom Right corner
+            var xBlockBottomRight = Math.floor((x + width) / blockSize);
+            var yBlockBottomRight = Math.floor((y + height) / blockSize);
 
 
-            if (y + height > 700)
-                vy = -16;
+            if (vy >= 0)
+                if (obj[xBlockBottomLeft][yBlockBottomLeft] || obj[xBlockBottomRight][yBlockBottomRight]) {
+                    vy = 0;
+                    
+                }
 
+            if (vy < 0)
+                if (obj[xBlockUpperLeft][yBlockUpperLeft] || obj[xBlockUpperRight][yBlockUpperRight])
+                    vy = 0;
+
+            //            console.log(Math.floor(xAxis / blockSize));
+            //            console.log(yBlock);
+            //            console.log(obj[xBlock][yBlock]);
+            //
+
+            if (x <= 0)
+                if (vx < 0)
+                    vx = -vx;
 
         };
 
@@ -158,7 +183,7 @@
 
         };
 
-        function fnMove(g) {
+        function fnMove(g, obj, blockSize) {
             //x-axys stop
             //            if (vx > 0)
             //                vx += -1;
@@ -166,14 +191,15 @@
             //                vx += 1;
 
             //Gravity
-            //        vy += g;
+            vy += g;
 
             //Test Collision
-            this.collide();
+            this.collide(obj, blockSize);
 
             //Increment the position
             x += vx;
             y += vy;
+
 
 
         };
@@ -200,7 +226,7 @@
             //y-axys movement
             if (e.key == "w" || e.key == "W") {
                 if (vy == 0)
-                    vy = -16;
+                    vy = -24;
             }
 
 

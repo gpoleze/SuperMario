@@ -12,7 +12,8 @@
     //initialize canvas and contexts
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
-    var ctxBackground = canvas.getContext("2d");
+    var canvasBackground = document.getElementById("myCanvas");
+    var ctxBackground = canvasBackground.getContext("2d");
     var scale = 2;
 
     var width = 512;
@@ -103,29 +104,20 @@
     }
     var mario = new Hero("mario", marioSpriteMap, scale)
 
-    
+
     //First Stage Map Elements
-    var map = [];
-    var block = 8;
+    var block = 16 * scale;
+    var map = getMap(block,canvas);
 
-    for (var i = 0; i < canvas.width / block; i++) {
-        map[i] = [];
-        for (var j = 0; j < canvas.height / block; j++) {
-            if (j == 104)
-                map[i][j] = true;
-            else if (j > 104)
-                map[i][j] = true;
-            else
-                map[i][j] = false;
-        }
-    }
 
-    var stage = new Stage(map, canvas.width, canvas.height,"yoshi");
+    var stage = new Stage(map, block, scale, canvas.width, canvas.height, "yoshi");
+
+    //    stage.draw(ctxBackground);
 
     //BACKGROUND
     var background = new Background("yoshi", canvas.width, canvas.height);
-    
-    
+    //    background.draw(ctxBackground);
+
     //CLOUDS CREATION
     var numberOfClouds = Math.ceil(Math.random() * 8);
     var cloud = new Array(numberOfClouds);
@@ -136,13 +128,14 @@
             Math.random() * 4
         );
 
-   
+
     window.gameSetup = fnGameSetup;
 
     function fnGameSetup() {
         return {
-            hero:mario,
-            background:background,
+            hero: mario,
+            background: background,
+            stage: stage,
             fps: fps,
             stop: stop,
             g: g,
