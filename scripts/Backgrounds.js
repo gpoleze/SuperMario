@@ -1,4 +1,5 @@
 function Background(world, width, height) {
+    "use strict";
     var world = world;
     var dWidth = width;
     var dHeight = height;
